@@ -53,13 +53,22 @@
         <nav>
             <div class="logo">Mapa Verde</div>
             <ul class="nav-links">
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Servicios</a></li>
-                <li><a href="#">Contacto</a></li>
-                <li><a href="login.html" class="login-btn">Login</a></li>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="noticias.html">Noticias e Informacion</a></li>
+                <li><a href="estadisticas.html">Estadisticas</a></li>
+                <li><a href="login.php" class="login-btn">Login</a></li>
             </ul>
         </nav>
     </header>
+
+    <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque tempore tenetur maxime saepe laborum nisi dignissimos adipisci rem, architecto, iure aliquid obcaecati illum totam! Totam reiciendis sunt similique asperiores ducimus.
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora, voluptate cumque? Maiores beatae, debitis soluta quis saepe facilis aliquam! Eos modi expedita accusantium hic officiis sint neque perferendis distinctio itaque.
+    </p>
+    <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque tempore tenetur maxime saepe laborum nisi dignissimos adipisci rem, architecto, iure aliquid obcaecati illum totam! Totam reiciendis sunt similique asperiores ducimus.
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora, voluptate cumque? Maiores beatae, debitis soluta quis saepe facilis aliquam! Eos modi expedita accusantium hic officiis sint neque perferendis distinctio itaque.
+    </p>
 
     <div class="controls">
         <button onclick="iniciarDibujo()">Nuevo punto Limpio</button>
@@ -80,6 +89,10 @@
     <div id="map"></div>
     <div id="lista-poligonos"></div>
 
+    <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque tempore tenetur maxime saepe laborum nisi dignissimos adipisci rem, architecto, iure aliquid obcaecati illum totam! Totam reiciendis sunt similique asperiores ducimus.
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora, voluptate cumque? Maiores beatae, debitis soluta quis saepe facilis aliquam! Eos modi expedita accusantium hic officiis sint neque perferendis distinctio itaque.
+    </p>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         let mapa;
@@ -89,9 +102,18 @@
         let poligonos = [];
 
         function inicializarMapa() {
-            mapa = L.map('map').setView([40.416775, -3.703790], 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapa);
-            cargarPoligonos();
+            if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(
+                    function(position){
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+
+                        mapa = L.map('map').setView([lat, lng], 15);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapa);
+                        cargarPoligonos();
+                    }
+                )
+            }
         }
 
         function iniciarDibujo() {
@@ -227,6 +249,9 @@
 
     <script src="cliente.js"></script>
 
+    <div id="comments">
+        
+    </div>
     <footer>
         <p>&copy; 2024 Web Responsive. Hecho por Francisco Javier Gutierrez Ildefonso.</p>
     </footer>
