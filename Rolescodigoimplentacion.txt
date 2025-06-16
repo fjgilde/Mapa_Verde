@@ -1,0 +1,88 @@
+Asignar Roles usuarios 
+
+______________________________________________________________________________________________________________
+
+<?php
+    // Asignar rol al usuario
+    require_once 'db-connect.php';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['AsignarRol'])) {
+        $usuario = $conn->real_escape_string($_POST['usuario']);
+        $rol = $conn->real_escape_string($_POST['rol']);
+
+        // Verificar si el usuario existe
+        $checkUser = $conn->prepare("SELECT 1 FROM list_user_pag WHERE Usuarios = ?");
+        $checkUser->bind_param("s", $usuario);
+        $checkUser->execute();
+        $checkUser->store_result();
+
+        if ($checkUser->num_rows > 0) {
+            // Asignar rol al usuario
+            $stmt = $conn->prepare("UPDATE list_user_pag SET Rol = ? WHERE Usuarios = ?");
+            $stmt->bind_param("ss", $rol, $usuario);
+
+            if ($stmt->execute()) {
+
+            } else {
+                echo "Error al asignar el rol: " . htmlspecialchars($conn->error);
+            }
+            $stmt->close();
+        } else {
+            echo "El usuario no existe.";
+        }
+        $checkUser->close();
+    }
+    ?>
+    <!-- Asiganar rol al usuario -->
+    <form id="formulario" method="post">
+        <div class="form-group">
+            <label for="usuario">Usuario:</label>
+            <?php
+            $sql = "SELECT Usuarios FROM list_user_pag";
+            $result = $conn->query($sql);
+            if ($result->num_rows > 0) {
+                echo '<select id="usuario" name="usuario">';
+                while ($row = $result->fetch_assoc()) {
+                    echo '<option value="' . htmlspecialchars($row['Usuarios']) . '">' . htmlspecialchars($row['Usuarios']) . '</option>';
+                }
+                echo '</select>';
+            } else {
+                echo '<input type="text" id="usuario" name="usuario" placeholder="No hay usuarios disponibles">';
+            }
+            ?>
+        </div>
+        <div class="form-group">
+            <label for="rol">Rol:</label>
+            <select id="rol" name="rol" required>
+                <option value="admin">Administrador</option>
+                <option value="editor">Editor</option>
+                <option value="lector">Lector</option>
+            </select>
+        </div>
+        <button type="submit" name="AsignarRol">Asignar Rol</button>
+    </form>
+
+______________________________________________________________________________________________________________
+
+Verificador de rol y acceso
+
+______________________________________________________________________________________________________________
+
+
+<?php
+// Verificar si el usuario es administrador
+session_start();
+if (isset($_SESSION['Rol']) && $_SESSION['Rol'] === 'admin'){
+
+//Resto del codigo hasta el final
+
+
+<?php } else { ?>
+    <script>
+        alert('Acceso denegado. Solo los administradores pueden acceder a esta página.');
+        window.location.href = 'index.php';
+    </script>
+    <?php exit();
+} ?>
+
+
+
